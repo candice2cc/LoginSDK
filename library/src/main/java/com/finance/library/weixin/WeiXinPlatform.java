@@ -9,8 +9,10 @@ import android.util.Log;
 import com.finance.library.IPlatform;
 import com.finance.library.LoginSDK;
 import com.finance.library.entity.LoginReqEntity;
+import com.finance.library.entity.UserRespEntity;
 import com.finance.library.listener.HttpListener;
 import com.finance.library.listener.LoginListener;
+import com.finance.library.utils.CodeEnum;
 import com.finance.library.utils.LoginHelper;
 import com.tencent.mm.opensdk.constants.ConstantsAPI;
 import com.tencent.mm.opensdk.modelbase.BaseReq;
@@ -129,23 +131,23 @@ public class WeiXinPlatform implements IPlatform {
                 case BaseResp.ErrCode.ERR_USER_CANCEL:
                     // 登录取消
                     loginListener.onCancel(
-                            new UserResp.Builder(UserResp.Code.CODE_CANCEL)
-                                    .setMessage("登录取消")
+                            new UserRespEntity.Builder(CodeEnum.LOGIN_CANCEL.getCode())
+                                    .setMessage(CodeEnum.LOGIN_CANCEL.getMsg())
                                     .build()
                     );
                     break;
                 case BaseResp.ErrCode.ERR_AUTH_DENIED:
                     // 用户拒绝
                     loginListener.onError(
-                            new UserResp.Builder(UserResp.Code.CODE_DENY)
-                                    .setMessage("用户拒绝")
+                            new UserRespEntity.Builder(CodeEnum.DENY.getCode())
+                                    .setMessage(CodeEnum.DENY.getMsg())
                                     .build()
                     );
                     break;
                 default:
                     // 返回
                     loginListener.onError(
-                            new UserResp.Builder(UserResp.Code.CODE_ERROR)
+                            new UserRespEntity.Builder(CodeEnum.ERROR_OTHER.getCode())
                                     .setMessage(authResp.errStr)
                                     .build()
                     );

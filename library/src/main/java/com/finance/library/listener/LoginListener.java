@@ -1,11 +1,11 @@
 package com.finance.library.listener;
 
-import com.finance.library.weixin.UserResp;
+import com.finance.library.entity.UserRespEntity;
 
 public interface LoginListener {
-    void onSuccess(UserResp response);
+    void onSuccess(UserRespEntity response);
 
-    void onError(UserResp response);
+    void onError(UserRespEntity response);
 
-    void onCancel(UserResp response);
+    void onCancel(UserRespEntity response);
 }

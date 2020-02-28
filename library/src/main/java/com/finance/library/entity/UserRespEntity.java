@@ -1,13 +1,11 @@
-package com.finance.library.weixin;
+package com.finance.library.entity;
 
-import com.finance.library.entity.UserInfoEntity;
-
-public class UserResp {
+public class UserRespEntity {
     private int code;
     private String message;
     private UserInfoEntity userInfoEntity;
 
-    public UserResp(Builder builder) {
+    public UserRespEntity(Builder builder) {
         this.code = builder.code;
         this.message = builder.message;
         this.userInfoEntity = builder.userInfoEntity;
@@ -25,12 +23,7 @@ public class UserResp {
         return userInfoEntity;
     }
 
-    public interface Code {
-        int CODE_SUCCESS = 0;
-        int CODE_ERROR = -1;
-        int CODE_CANCEL = -2;
-        int CODE_DENY = -3;
-    }
+
 
     public static final class Builder {
         // 必填字段
@@ -54,8 +47,8 @@ public class UserResp {
             return this;
         }
 
-        public UserResp build() {
-            return new UserResp(this);
+        public UserRespEntity build() {
+            return new UserRespEntity(this);
         }
     }
 
