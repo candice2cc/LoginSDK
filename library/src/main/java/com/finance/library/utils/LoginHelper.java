@@ -2,9 +2,9 @@ package com.finance.library.utils;
 
 import com.finance.library.entity.LoginReqEntity;
 import com.finance.library.entity.UserInfoEntity;
+import com.finance.library.entity.UserRespEntity;
 import com.finance.library.listener.HttpListener;
 import com.finance.library.listener.LoginListener;
-import com.finance.library.weixin.UserResp;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -100,9 +100,9 @@ public class LoginHelper {
                 userInfoEntity.setGender(gender);
                 userInfoEntity.setAvatar(avatar);
 
-                loginListener.onSuccess(new UserResp.Builder(UserResp.Code.CODE_SUCCESS)
-                        .setUserInfoEntity(userInfoEntity)
+                loginListener.onSuccess(new UserRespEntity.Builder(CodeEnum.SUCCESS.getCode())
                         .setMessage("登录成功")
+                        .setUserInfoEntity(userInfoEntity)
                         .build());
 
             } else {
@@ -118,11 +118,15 @@ public class LoginHelper {
         }
     }
 
-    public static void onError(LoginListener loginListener) {
-        // TODO 失败时的错误处理：根据服务端透传？
-        loginListener.onError(new UserResp.Builder(UserResp.Code.CODE_ERROR)
-                .setMessage("服务器异常，请稍后重试！")
+    public static void onError(int code, String msg, LoginListener loginListener) {
+        loginListener.onError(new UserRespEntity.Builder(code)
+                .setMessage(msg)
                 .build());
+    }
+
+    public static void onError(LoginListener loginListener){
+        onError(CodeEnum.FAIL.getCode(), CodeEnum.FAIL.getMsg(), loginListener);
+
     }
 
 

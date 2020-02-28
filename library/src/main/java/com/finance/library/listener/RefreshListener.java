@@ -1,10 +1,10 @@
 package com.finance.library.listener;
 
-import com.finance.library.weixin.UserResp;
+import com.finance.library.entity.UserRespEntity;
 
 public interface RefreshListener {
-    void onSuccess(UserResp response);
+    void onSuccess(UserRespEntity response);
 
-    void onError(UserResp response);
+    void onError(UserRespEntity response);
 
 }

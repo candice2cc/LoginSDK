@@ -2,9 +2,9 @@ package com.finance.library.utils;
 
 import com.finance.library.entity.RefreshReqEntity;
 import com.finance.library.entity.UserInfoEntity;
+import com.finance.library.entity.UserRespEntity;
 import com.finance.library.listener.HttpListener;
 import com.finance.library.listener.RefreshListener;
-import com.finance.library.weixin.UserResp;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -44,7 +44,7 @@ public class RefreshHelper {
                 final UserInfoEntity userInfoEntity = new UserInfoEntity();
                 userInfoEntity.setAccessToken(accessToken);
                 userInfoEntity.setExpiresIn(expiresIn);
-                refreshListener.onSuccess(new UserResp.Builder(UserResp.Code.CODE_SUCCESS)
+                refreshListener.onSuccess(new UserRespEntity.Builder(CodeEnum.SUCCESS.getCode())
                         .setUserInfoEntity(userInfoEntity)
                         .setMessage("刷新成功")
                         .build());
@@ -60,11 +60,16 @@ public class RefreshHelper {
         }
     }
 
-    public static void onError(RefreshListener refreshListener) {
-        // TODO 刷新失败的返回处理：根据服务端透传？
-        refreshListener.onError(new UserResp.Builder(UserResp.Code.CODE_ERROR)
-                .setMessage("服务器异常，请稍后重试！")
+    public static void onError(int code, String msg, RefreshListener refreshListener) {
+        refreshListener.onError(new UserRespEntity.Builder(code)
+                .setMessage(msg)
                 .build());
     }
+
+    public static void onError(RefreshListener refreshListener) {
+        onError(CodeEnum.FAIL.getCode(), CodeEnum.FAIL.getMsg(), refreshListener);
+
+    }
+
 
 }

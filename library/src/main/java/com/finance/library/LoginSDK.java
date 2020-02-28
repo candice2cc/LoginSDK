@@ -5,12 +5,15 @@ import android.content.Intent;
 import android.util.Log;
 
 import com.finance.library.entity.RefreshReqEntity;
+import com.finance.library.entity.UserRespEntity;
 import com.finance.library.listener.HttpListener;
+import com.finance.library.listener.IBaseListener;
 import com.finance.library.listener.LoginListener;
 import com.finance.library.listener.RefreshListener;
+import com.finance.library.utils.CodeEnum;
+import com.finance.library.utils.LogoutHelper;
 import com.finance.library.utils.RefreshHelper;
 import com.finance.library.utils.SDKUtil;
-import com.finance.library.weixin.UserResp;
 import com.finance.library.weixin.WeixinHandleActivity;
 
 import java.io.IOException;
@@ -93,7 +96,7 @@ public class LoginSDK {
             }
         } catch (Throwable throwable) {
             loginListener.onError(
-                    new UserResp.Builder(UserResp.Code.CODE_ERROR)
+                    new UserRespEntity.Builder(CodeEnum.ERROR_OTHER.getCode())
                             .setMessage(throwable.getMessage())
                             .build()
             );
@@ -146,8 +149,23 @@ public class LoginSDK {
 
     /**
      * 登录注销
+     *
+     * @param accessToken
+     * @param openId
+     * @param listener
      */
-    public void doLoginOut() {
+    public void doLogout(String accessToken, String openId, final IBaseListener listener) {
+        LogoutHelper.logout(accessToken, openId, new HttpListener() {
+            @Override
+            public void onFailure(IOException e) {
+                LogoutHelper.onError(listener);
+            }
+
+            @Override
+            public void onResponse(String responseStr) {
+                LogoutHelper.onLogout(responseStr, listener);
+            }
+        });
 
 
     }
@@ -164,18 +182,18 @@ public class LoginSDK {
         if (loginListener == null) {
             loginListener = new LoginListener() {
                 @Override
-                public void onSuccess(UserResp response) {
+                public void onSuccess(UserRespEntity response) {
                     Log.d(TAG, "登录成功");
                 }
 
                 @Override
-                public void onError(UserResp response) {
+                public void onError(UserRespEntity response) {
                     Log.d(TAG, "登录失败");
 
                 }
 
                 @Override
-                public void onCancel(UserResp response) {
+                public void onCancel(UserRespEntity response) {
                     Log.d(TAG, "登录取消");
 
                 }
