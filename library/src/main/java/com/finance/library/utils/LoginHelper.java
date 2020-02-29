@@ -1,6 +1,8 @@
 package com.finance.library.utils;
 
+import com.finance.library.CodeEnum;
 import com.finance.library.entity.LoginReqEntity;
+import com.finance.library.config.ServiceConstants;
 import com.finance.library.entity.UserInfoEntity;
 import com.finance.library.entity.UserRespEntity;
 import com.finance.library.listener.HttpListener;
@@ -52,7 +54,7 @@ public class LoginHelper {
                 userInfoEntity.setExpiresIn(expiresIn);
 
                 // 请求服务端，通过accessToken和openid请求用户数据
-                LoginHelper.queryUserInfo(accessToken, openId, new HttpListener() {
+                queryUserInfo(accessToken, openId, new HttpListener() {
                     @Override
                     public void onFailure(IOException e) {
                         onError(loginListener);

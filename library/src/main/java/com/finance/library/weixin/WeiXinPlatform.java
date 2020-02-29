@@ -8,11 +8,13 @@ import android.util.Log;
 
 import com.finance.library.IPlatform;
 import com.finance.library.LoginSDK;
+import com.finance.library.Provider;
+import com.finance.library.config.ServiceConstants;
 import com.finance.library.entity.LoginReqEntity;
 import com.finance.library.entity.UserRespEntity;
 import com.finance.library.listener.HttpListener;
 import com.finance.library.listener.LoginListener;
-import com.finance.library.utils.CodeEnum;
+import com.finance.library.CodeEnum;
 import com.finance.library.utils.LoginHelper;
 import com.tencent.mm.opensdk.constants.ConstantsAPI;
 import com.tencent.mm.opensdk.modelbase.BaseReq;
@@ -112,8 +114,8 @@ public class WeiXinPlatform implements IPlatform {
                     LoginReqEntity reqEntity = new LoginReqEntity();
                     reqEntity.setClientId(LoginSDK.getInstance().getAppValue(LoginSDK.KEY_CLIENT_ID));
                     reqEntity.setCode(code);
-                    reqEntity.setProvider(LoginReqEntity.PROVIDER_WEIXIN);
-                    reqEntity.setScope(LoginReqEntity.SCOPE_USER_INFO_FULL);
+                    reqEntity.setProvider(Provider.WEIXIN);
+                    reqEntity.setScope(ServiceConstants.SCOPE_USER_INFO_FULL);
                     LoginHelper.loginAuth(reqEntity, new HttpListener() {
                         @Override
                         public void onFailure(IOException e) {

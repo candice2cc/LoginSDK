@@ -1,4 +1,4 @@
-package com.finance.library.utils;
+package com.finance.library;
 
 /**
  * SDK错误码和文案
