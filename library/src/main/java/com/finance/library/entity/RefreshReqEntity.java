@@ -1,7 +1,6 @@
 package com.finance.library.entity;
 
 public class RefreshReqEntity {
-    public static final String GRANT_TYPE = "refresh_token";
 
     private String clientId;
     private String clientSecret;

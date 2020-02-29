@@ -1,9 +1,7 @@
 package com.finance.library.entity;
 
 public class LoginReqEntity {
-    public static final String PROVIDER_WEIXIN = "wechat";
-    public static final String SCOPE_USER_INFO_FULL = "userinfo_full";
-    public static final String SCOPE_USER_INFO = "userinfo";
+
 
     private String clientId;
     private String provider;

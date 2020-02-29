@@ -1,8 +1,11 @@
 package com.finance.library.entity;
 
+import org.json.JSONObject;
+
 public class IBaseRespEntity {
     private int code;
     private String message;
+    private JSONObject data;
 
     public IBaseRespEntity(int code, String message) {
         this.code = code;
@@ -23,5 +26,13 @@ public class IBaseRespEntity {
 
     public void setMessage(String message) {
         this.message = message;
+    }
+
+    public JSONObject getData() {
+        return data;
+    }
+
+    public void setData(JSONObject data) {
+        this.data = data;
     }
 }

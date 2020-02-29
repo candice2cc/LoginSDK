@@ -1,6 +1,8 @@
 package com.finance.library.utils;
 
+import com.finance.library.CodeEnum;
 import com.finance.library.entity.RefreshReqEntity;
+import com.finance.library.config.ServiceConstants;
 import com.finance.library.entity.UserInfoEntity;
 import com.finance.library.entity.UserRespEntity;
 import com.finance.library.listener.HttpListener;
@@ -25,7 +27,7 @@ public class RefreshHelper {
         FormBody formBody = new FormBody.Builder()
                 .add("client_id", refreshReq.getClientId())
                 .add("client_secret", refreshReq.getClientSecret())
-                .add("grant_type", RefreshReqEntity.GRANT_TYPE)
+                .add("grant_type", ServiceConstants.GRANT_TYPE)
                 .add("refresh_token", refreshReq.getRefreshToken())
                 .build();
 

@@ -4,13 +4,16 @@ import android.app.Activity;
 import android.content.Intent;
 import android.util.Log;
 
+import com.finance.library.config.ServiceConstants;
+import com.finance.library.entity.BindAccountReqEntity;
 import com.finance.library.entity.RefreshReqEntity;
 import com.finance.library.entity.UserRespEntity;
 import com.finance.library.listener.HttpListener;
 import com.finance.library.listener.IBaseListener;
 import com.finance.library.listener.LoginListener;
 import com.finance.library.listener.RefreshListener;
-import com.finance.library.utils.CodeEnum;
+import com.finance.library.utils.BindHelper;
+import com.finance.library.utils.IBaseHelper;
 import com.finance.library.utils.LogoutHelper;
 import com.finance.library.utils.RefreshHelper;
 import com.finance.library.utils.SDKUtil;
@@ -128,7 +131,7 @@ public class LoginSDK {
         RefreshReqEntity refreshReq = new RefreshReqEntity();
         refreshReq.setClientId(getAppValue(KEY_CLIENT_ID));
         refreshReq.setClientSecret(getAppValue(KEY_CLIENT_SECRET));
-        refreshReq.setGrantType(RefreshReqEntity.GRANT_TYPE);
+        refreshReq.setGrantType(ServiceConstants.GRANT_TYPE);
         refreshReq.setRefreshToken(refreshToken);
         RefreshHelper.refreshAccessToken(refreshReq, new HttpListener() {
             @Override
@@ -158,19 +161,74 @@ public class LoginSDK {
         LogoutHelper.logout(accessToken, openId, new HttpListener() {
             @Override
             public void onFailure(IOException e) {
-                LogoutHelper.onError(listener);
+                IBaseHelper.onError(listener);
             }
 
             @Override
             public void onResponse(String responseStr) {
-                LogoutHelper.onLogout(responseStr, listener);
+                IBaseHelper.onResponse(responseStr, listener);
             }
         });
 
 
     }
 
-    public void doBindTel() {
+    /**
+     * 发送手机验证码
+     *
+     * @param phone
+     * @param listener
+     */
+    public void doSendCode(String phone, final IBaseListener listener) {
+        BindHelper.sendTelCode(getAppValue(KEY_CLIENT_ID), phone, new HttpListener() {
+            @Override
+            public void onFailure(IOException e) {
+                IBaseHelper.onError(listener);
+            }
+
+            @Override
+            public void onResponse(String responseStr) {
+                BindHelper.onTelCode(responseStr, listener);
+
+
+            }
+        });
+
+    }
+
+    /**
+     * eg.
+     * provider为noxPhone时：
+     * code取值为：{\"requestToken\":\"RT-5-HvH9bdGvwafxFBkA5e4qnE4dpC9gwb-bignox.com\",\"phone\":\"13716093328\",\"code\":\"3203\"}
+     *
+     * @param accessToken
+     * @param openId
+     * @param code
+     * @param provider
+     * @param listener
+     */
+    public void doBind(String accessToken, String openId, String code, String provider, final IBaseListener listener) {
+        BindAccountReqEntity bindReq = new BindAccountReqEntity();
+        bindReq.setClientId(getAppValue(KEY_CLIENT_ID));
+        bindReq.setClientSecret(getAppValue(KEY_CLIENT_SECRET));
+        bindReq.setAccessToken(accessToken);
+        bindReq.setOpenId(openId);
+        bindReq.setCode(code);
+        bindReq.setProvider(provider);
+        BindHelper.bindAccount(bindReq, new HttpListener() {
+            @Override
+            public void onFailure(IOException e) {
+                IBaseHelper.onError(listener);
+            }
+
+            @Override
+            public void onResponse(String responseStr) {
+                IBaseHelper.onResponse(responseStr, listener);
+            }
+        });
+    }
+
+    public void getUserInfo() {
 
     }
 

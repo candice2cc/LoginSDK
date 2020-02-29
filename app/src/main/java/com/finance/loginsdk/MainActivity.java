@@ -4,10 +4,12 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.finance.library.LoginSDK;
+import com.finance.library.Provider;
 import com.finance.library.entity.IBaseRespEntity;
 import com.finance.library.entity.UserRespEntity;
 import com.finance.library.listener.IBaseListener;
@@ -15,11 +17,20 @@ import com.finance.library.listener.LoginListener;
 import com.finance.library.listener.RefreshListener;
 import com.finance.library.weixin.WeiXinPlatform;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
     private final static String TAG = "MainActivity";
-    private Button weixinLoginBtn, refreshBtn, logoutBtn;
+    private Button weixinLoginBtn, refreshBtn, logoutBtn, codeBtn, telLoginBtn, telBindBtn;
+
+
+    private EditText telInput, codeInput;
+
 
     private String refreshToken, openId, accessToken;
+
+    private JSONObject sendCodeResData;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,9 +41,19 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         refreshBtn = findViewById(R.id.refresh_btn);
         logoutBtn = findViewById(R.id.logout_btn);
 
+        telInput = findViewById(R.id.tel_input);
+        codeInput = findViewById(R.id.code_input);
+        codeBtn = findViewById(R.id.code_btn);
+        telLoginBtn = findViewById(R.id.tel_login_btn);
+        telBindBtn = findViewById(R.id.tel_bind_btn);
+
+
         weixinLoginBtn.setOnClickListener(this);
         refreshBtn.setOnClickListener(this);
-        logoutBtn.setOnClickListener(this);
+
+        codeBtn.setOnClickListener(this);
+        telBindBtn.setOnClickListener(this);
+        telLoginBtn.setOnClickListener(this);
 
 
     }
@@ -41,6 +62,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     public void onClick(View v) {
         int id = v.getId();
+        String phone = telInput.getText().toString();
+        String code = codeInput.getText().toString();
+
         switch (id) {
             case R.id.weixin_login_btn:
                 LoginSDK.getInstance().doLogin(this, WeiXinPlatform.LOGIN, new LoginListener() {
@@ -105,6 +129,52 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         }
                     });
 
+
+                }
+                break;
+
+            case R.id.code_btn:
+                if (phone.length() > 0) {
+                    LoginSDK.getInstance().doSendCode(phone, new IBaseListener() {
+                        @Override
+                        public void onSuccess(IBaseRespEntity response) {
+                            Log.d(TAG, "code:" + response.getCode() + ",message:" + response.getMessage());
+                            Log.d(TAG, response.getData().toString());
+                            sendCodeResData = response.getData();
+                        }
+
+                        @Override
+                        public void onError(IBaseRespEntity response) {
+                            Log.d(TAG, "code:" + response.getCode() + ",message:" + response.getMessage());
+
+                        }
+                    });
+
+                }
+                break;
+            case R.id.tel_bind_btn:
+                if (phone.length() > 0 && code.length() > 0 && accessToken != null && openId != null && sendCodeResData != null) {
+                    JSONObject codeJson = new JSONObject();
+
+                    try {
+                        codeJson.putOpt("phone", phone);
+                        codeJson.putOpt("code", code);
+                        codeJson.putOpt("requestToken", sendCodeResData.optString("requestToken"));
+                        LoginSDK.getInstance().doBind(accessToken, openId, codeJson.toString(), Provider.NOXPHONE, new IBaseListener() {
+                            @Override
+                            public void onSuccess(IBaseRespEntity response) {
+                                Log.d(TAG, "code:" + response.getCode() + ",message:" + response.getMessage());
+                            }
+
+                            @Override
+                            public void onError(IBaseRespEntity response) {
+                                Log.d(TAG, "code:" + response.getCode() + ",message:" + response.getMessage());
+                            }
+                        });
+
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
 
                 }
                 break;
