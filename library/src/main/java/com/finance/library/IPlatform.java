@@ -20,7 +20,11 @@ public interface IPlatform {
 
     void doLogin(Activity activity);
 
+    /**
+     * 收到第三方平台回调
+     */
     void handleResponse(Object response);
+
 
     void onResponse(Activity activity, Intent data);
 

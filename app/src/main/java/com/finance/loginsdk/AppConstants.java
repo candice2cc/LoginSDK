@@ -7,6 +7,8 @@ public class AppConstants {
     public static final String APP_ID_WX = "wx823f8a5d995695de";
     public static final String APP_SECRET_WX = "dde9c6e9751e6d6eefa0eb3269f6b7e5";
 
+    public static final String APP_ID_QQ = "101850471";
+    public static final String APP_SECRET_QQ = "6f518a381fbfb014a1444a800c69ccd9";
 
 
 
