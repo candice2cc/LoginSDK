@@ -15,6 +15,7 @@ import com.finance.library.entity.UserRespEntity;
 import com.finance.library.listener.IBaseListener;
 import com.finance.library.listener.LoginListener;
 import com.finance.library.listener.RefreshListener;
+import com.finance.library.qq.QQPlatform;
 import com.finance.library.weixin.WeiXinPlatform;
 
 import org.json.JSONException;
@@ -22,7 +23,7 @@ import org.json.JSONObject;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
     private final static String TAG = "MainActivity";
-    private Button weixinLoginBtn, refreshBtn, logoutBtn, codeBtn, telLoginBtn, telBindBtn;
+    private Button weixinLoginBtn, qqLoginBtn, refreshBtn, logoutBtn, codeBtn, telLoginBtn, telBindBtn;
 
 
     private EditText telInput, codeInput;
@@ -32,12 +33,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     private JSONObject sendCodeResData;
 
+    private LoginListener loginListener;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
         weixinLoginBtn = findViewById(R.id.weixin_login_btn);
+        qqLoginBtn = findViewById(R.id.qq_login_btn);
         refreshBtn = findViewById(R.id.refresh_btn);
         logoutBtn = findViewById(R.id.logout_btn);
 
@@ -49,11 +53,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
 
         weixinLoginBtn.setOnClickListener(this);
+        qqLoginBtn.setOnClickListener(this);
         refreshBtn.setOnClickListener(this);
+        logoutBtn.setOnClickListener(this);
 
         codeBtn.setOnClickListener(this);
         telBindBtn.setOnClickListener(this);
         telLoginBtn.setOnClickListener(this);
+
 
 
     }
@@ -67,29 +74,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         switch (id) {
             case R.id.weixin_login_btn:
-                LoginSDK.getInstance().doLogin(this, WeiXinPlatform.LOGIN, new LoginListener() {
-                    @Override
-                    public void onSuccess(UserRespEntity response) {
-                        Log.d(TAG, "code:" + response.getCode() + ",message:" + response.getMessage());
-                        Log.d(TAG, response.getUserInfoEntity().toString());
-                        refreshToken = response.getUserInfoEntity().getRefreshToken();
-                        accessToken = response.getUserInfoEntity().getAccessToken();
-                        openId = response.getUserInfoEntity().getOpenId();
-                    }
-
-                    @Override
-                    public void onError(UserRespEntity response) {
-                        Log.d(TAG, "code:" + response.getCode() + ",message:" + response.getMessage());
-
-                    }
-
-                    @Override
-                    public void onCancel(UserRespEntity response) {
-                        Log.d(TAG, "code:" + response.getCode() + ",message:" + response.getMessage());
-
-                    }
-                });
+                LoginSDK.getInstance().doLogin(this, WeiXinPlatform.LOGIN, getLoginListener());
                 break;
+
+            case R.id.qq_login_btn:
+                LoginSDK.getInstance().doLogin(this, QQPlatform.LOGIN, getLoginListener());
+                break;
+
             case R.id.logout_btn:
                 if (accessToken != null && openId != null) {
                     LoginSDK.getInstance().doLogout(accessToken, openId, new IBaseListener() {
@@ -108,8 +99,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         }
                     });
                 }
-
-
                 break;
             case R.id.refresh_btn:
                 if (refreshToken != null) {
@@ -181,5 +170,33 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             default:
                 break;
         }
+    }
+
+    private LoginListener getLoginListener() {
+        if (loginListener == null) {
+            loginListener = new LoginListener() {
+                @Override
+                public void onSuccess(UserRespEntity response) {
+                    Log.d(TAG, "code:" + response.getCode() + ",message:" + response.getMessage());
+                    Log.d(TAG, response.getUserInfoEntity().toString());
+                    refreshToken = response.getUserInfoEntity().getRefreshToken();
+                    accessToken = response.getUserInfoEntity().getAccessToken();
+                    openId = response.getUserInfoEntity().getOpenId();
+                }
+
+                @Override
+                public void onError(UserRespEntity response) {
+                    Log.d(TAG, "code:" + response.getCode() + ",message:" + response.getMessage());
+
+                }
+
+                @Override
+                public void onCancel(UserRespEntity response) {
+                    Log.d(TAG, "code:" + response.getCode() + ",message:" + response.getMessage());
+
+                }
+            };
+        }
+        return loginListener;
     }
 }

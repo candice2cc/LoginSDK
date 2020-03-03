@@ -31,6 +31,7 @@ public class WeixinHandleActivity extends Activity {
             Log.d(TAG,"handleResp");
             handleResp(getIntent());
         } else {
+            Log.d(TAG,"onActivityCreate");
             LoginSDK.getInstance().onActivityCreate(this);
         }
 
@@ -49,6 +50,16 @@ public class WeixinHandleActivity extends Activity {
         } else {
             Log.e(TAG, "LoginSDK.curPlatform is null");
         }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
+        super.onActivityResult(requestCode, resultCode, intent);
+        Log.d(TAG,"onActivityResult");
+        handleResp(intent);
+
+
+        finish();
     }
 
 
