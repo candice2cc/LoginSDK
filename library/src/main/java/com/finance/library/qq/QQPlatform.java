@@ -130,7 +130,7 @@ public class QQPlatform implements IPlatform {
                     // 请求服务端，通过QQ的accessToken和openId换服务端的accessToken和refreshToken、openid
                     JSONObject codeJson = new JSONObject();
                     codeJson.putOpt("accessToken", accessToken);
-                    codeJson.putOpt("openId", openId);
+                    codeJson.putOpt("openid", openId);
 
                     LoginReqEntity reqEntity = new LoginReqEntity();
                     reqEntity.setClientId(LoginSDK.getInstance().getAppValue(LoginSDK.KEY_CLIENT_ID));
