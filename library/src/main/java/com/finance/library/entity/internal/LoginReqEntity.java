@@ -1,5 +1,8 @@
-package com.finance.library.entity;
+package com.finance.library.entity.internal;
 
+/**
+ * 登录请求实体
+ */
 public class LoginReqEntity {
 
 

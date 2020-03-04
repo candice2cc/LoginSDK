@@ -5,12 +5,12 @@ import android.content.Intent;
 import android.util.Log;
 
 import com.finance.library.config.ServiceConstants;
-import com.finance.library.entity.BindAccountReqEntity;
+import com.finance.library.entity.internal.BindAccountReqEntity;
 import com.finance.library.entity.NoxPhoneCodeEntity;
-import com.finance.library.entity.RefreshReqEntity;
+import com.finance.library.entity.internal.RefreshReqEntity;
 import com.finance.library.entity.UserInfoEntity;
 import com.finance.library.entity.UserRespEntity;
-import com.finance.library.listener.HttpListener;
+import com.finance.library.listener.internal.HttpListener;
 import com.finance.library.listener.IBaseListener;
 import com.finance.library.listener.LoginListener;
 import com.finance.library.listener.RefreshListener;

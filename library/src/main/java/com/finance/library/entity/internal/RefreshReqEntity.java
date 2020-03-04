@@ -1,5 +1,8 @@
-package com.finance.library.entity;
+package com.finance.library.entity.internal;
 
+/**
+ * 刷新token请求实体
+ */
 public class RefreshReqEntity {
 
     private String clientId;

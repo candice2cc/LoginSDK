@@ -2,6 +2,7 @@ package com.finance.library.entity;
 
 import org.json.JSONObject;
 
+
 public class IBaseRespEntity {
     private int code;
     private String message;

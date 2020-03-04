@@ -1,7 +1,11 @@
 package com.finance.library.entity;
 
-import com.finance.library.Provider;
+import com.finance.library.config.Provider;
+import com.finance.library.entity.internal.CodeEntity;
 
+/**
+ * noxphone code字段实体封装
+ */
 public class NoxPhoneCodeEntity extends CodeEntity {
     private String phone;
     private String phoneCode;
