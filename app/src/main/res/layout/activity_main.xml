@@ -35,7 +35,12 @@
         android:layout_gravity="center"
         android:text="刷新Token" />
 
-
+    <Button
+        android:id="@+id/user_btn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:text="用户信息" />
 
     <include
         android:id="@+id/tel_layout"
