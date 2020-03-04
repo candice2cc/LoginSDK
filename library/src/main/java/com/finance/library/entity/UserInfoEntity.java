@@ -1,5 +1,8 @@
 package com.finance.library.entity;
 
+/**
+ * 用户信息实体
+ */
 public class UserInfoEntity {
     private String accessToken;
     private String refreshToken;

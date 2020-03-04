@@ -1,4 +1,4 @@
-package com.finance.library;
+package com.finance.library.config;
 
 public class Provider {
     public static final String WEIXIN = "wechat";

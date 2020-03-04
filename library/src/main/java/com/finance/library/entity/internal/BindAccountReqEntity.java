@@ -1,5 +1,8 @@
-package com.finance.library.entity;
+package com.finance.library.entity.internal;
 
+/**
+ * 绑定账号请求实体
+ */
 public class BindAccountReqEntity {
     private String accessToken;
     private String openId;

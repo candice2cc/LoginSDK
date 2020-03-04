@@ -1,7 +1,7 @@
 package com.finance.library.utils;
 
 import com.finance.library.config.ServiceConstants;
-import com.finance.library.listener.HttpListener;
+import com.finance.library.listener.internal.HttpListener;
 
 import okhttp3.FormBody;
 

@@ -2,7 +2,7 @@ package com.finance.library.utils;
 
 
 import com.finance.library.BuildConfig;
-import com.finance.library.listener.HttpListener;
+import com.finance.library.listener.internal.HttpListener;
 
 import java.io.IOException;
 

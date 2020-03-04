@@ -9,12 +9,15 @@ import android.widget.EditText;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.finance.library.LoginSDK;
+
 import com.finance.library.entity.IBaseRespEntity;
 import com.finance.library.entity.NoxPhoneCodeEntity;
 import com.finance.library.entity.UserRespEntity;
+
 import com.finance.library.listener.IBaseListener;
 import com.finance.library.listener.LoginListener;
 import com.finance.library.listener.RefreshListener;
+
 import com.finance.library.qq.QQPlatform;
 import com.finance.library.weixin.WeiXinPlatform;
 

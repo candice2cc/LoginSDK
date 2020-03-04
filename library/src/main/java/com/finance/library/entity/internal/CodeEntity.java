@@ -1,5 +1,8 @@
-package com.finance.library.entity;
+package com.finance.library.entity.internal;
 
+/**
+ * Code实体
+ */
 public class CodeEntity {
     private String provider;
 
