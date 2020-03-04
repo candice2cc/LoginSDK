@@ -140,7 +140,8 @@ public class WeiXinPlatform implements IPlatform {
                     break;
                 default:
                     // 返回
-                    LoginHelper.onError(CodeEnum.ERROR_OTHER.getCode(),authResp.errStr,loginListener);
+                    Log.d(TAG,authResp.errStr);
+                    LoginHelper.onError(CodeEnum.ERROR_OTHER.getCode(),CodeEnum.ERROR_OTHER.getMsg(),loginListener);
                     break;
             }
         }

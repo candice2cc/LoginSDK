@@ -99,7 +99,8 @@ public class QQPlatform implements IPlatform {
 
             @Override
             public void onError(UiError uiError) {
-                LoginHelper.onError(CodeEnum.ERROR_OTHER.getCode(),uiError.errorMessage,loginListener);
+                Log.d(TAG,uiError.errorMessage);
+                LoginHelper.onError(CodeEnum.ERROR_OTHER.getCode(),CodeEnum.ERROR_OTHER.getMsg(),loginListener);
             }
 
             @Override
