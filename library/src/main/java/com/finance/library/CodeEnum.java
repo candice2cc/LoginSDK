@@ -9,7 +9,6 @@ public enum CodeEnum {
     LOGIN_CANCEL(-2, "登录取消"),
     DENY(-3, "用户拒绝"),
 
-    ACCESS_TOKEN_TIMEOUT(10402, "accessToken过期，请刷新后重试！"),
     ERROR_OTHER(-100, "其他错误"),
     ;
 

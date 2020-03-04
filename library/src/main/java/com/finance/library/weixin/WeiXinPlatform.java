@@ -6,15 +6,14 @@ import android.content.Intent;
 import android.text.TextUtils;
 import android.util.Log;
 
+import com.finance.library.CodeEnum;
 import com.finance.library.IPlatform;
 import com.finance.library.LoginSDK;
 import com.finance.library.Provider;
 import com.finance.library.config.ServiceConstants;
 import com.finance.library.entity.LoginReqEntity;
-import com.finance.library.entity.UserRespEntity;
 import com.finance.library.listener.HttpListener;
 import com.finance.library.listener.LoginListener;
-import com.finance.library.CodeEnum;
 import com.finance.library.utils.LoginHelper;
 import com.tencent.mm.opensdk.constants.ConstantsAPI;
 import com.tencent.mm.opensdk.modelbase.BaseReq;
@@ -132,27 +131,16 @@ public class WeiXinPlatform implements IPlatform {
                     break;
                 case BaseResp.ErrCode.ERR_USER_CANCEL:
                     // 登录取消
-                    loginListener.onCancel(
-                            new UserRespEntity.Builder(CodeEnum.LOGIN_CANCEL.getCode())
-                                    .setMessage(CodeEnum.LOGIN_CANCEL.getMsg())
-                                    .build()
-                    );
+                    LoginHelper.onError(CodeEnum.LOGIN_CANCEL.getCode(),CodeEnum.LOGIN_CANCEL.getMsg(),loginListener);
+
                     break;
                 case BaseResp.ErrCode.ERR_AUTH_DENIED:
                     // 用户拒绝
-                    loginListener.onError(
-                            new UserRespEntity.Builder(CodeEnum.DENY.getCode())
-                                    .setMessage(CodeEnum.DENY.getMsg())
-                                    .build()
-                    );
+                    LoginHelper.onError(CodeEnum.DENY.getCode(),CodeEnum.DENY.getMsg(),loginListener);
                     break;
                 default:
                     // 返回
-                    loginListener.onError(
-                            new UserRespEntity.Builder(CodeEnum.ERROR_OTHER.getCode())
-                                    .setMessage(authResp.errStr)
-                                    .build()
-                    );
+                    LoginHelper.onError(CodeEnum.ERROR_OTHER.getCode(),authResp.errStr,loginListener);
                     break;
             }
         }
