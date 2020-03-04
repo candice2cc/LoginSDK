@@ -9,8 +9,8 @@ import android.widget.EditText;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.finance.library.LoginSDK;
-import com.finance.library.Provider;
 import com.finance.library.entity.IBaseRespEntity;
+import com.finance.library.entity.NoxPhoneCodeEntity;
 import com.finance.library.entity.UserRespEntity;
 import com.finance.library.listener.IBaseListener;
 import com.finance.library.listener.LoginListener;
@@ -18,12 +18,11 @@ import com.finance.library.listener.RefreshListener;
 import com.finance.library.qq.QQPlatform;
 import com.finance.library.weixin.WeiXinPlatform;
 
-import org.json.JSONException;
 import org.json.JSONObject;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
     private final static String TAG = "MainActivity";
-    private Button weixinLoginBtn, qqLoginBtn, refreshBtn, logoutBtn, codeBtn, telLoginBtn, telBindBtn;
+    private Button weixinLoginBtn, qqLoginBtn, refreshBtn, logoutBtn, codeBtn, telLoginBtn, telBindBtn, userBtn;
 
 
     private EditText telInput, codeInput;
@@ -44,6 +43,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         qqLoginBtn = findViewById(R.id.qq_login_btn);
         refreshBtn = findViewById(R.id.refresh_btn);
         logoutBtn = findViewById(R.id.logout_btn);
+        userBtn = findViewById(R.id.user_btn);
 
         telInput = findViewById(R.id.tel_input);
         codeInput = findViewById(R.id.code_input);
@@ -56,6 +56,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         qqLoginBtn.setOnClickListener(this);
         refreshBtn.setOnClickListener(this);
         logoutBtn.setOnClickListener(this);
+        userBtn.setOnClickListener(this);
 
         codeBtn.setOnClickListener(this);
         telBindBtn.setOnClickListener(this);
@@ -142,30 +143,35 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 break;
             case R.id.tel_bind_btn:
                 if (phone.length() > 0 && code.length() > 0 && accessToken != null && openId != null && sendCodeResData != null) {
-                    JSONObject codeJson = new JSONObject();
+                    NoxPhoneCodeEntity codeEntity = new NoxPhoneCodeEntity(phone, code, sendCodeResData.optString("requestToken"));
+                    LoginSDK.getInstance().doBind(accessToken, openId, codeEntity, new IBaseListener() {
+                        @Override
+                        public void onSuccess(IBaseRespEntity response) {
+                            Log.d(TAG, "code:" + response.getCode() + ",message:" + response.getMessage());
+                        }
 
-                    try {
-                        // 考虑后续其他账号类型的绑定，此处需要App端进行code的转换
-                        codeJson.putOpt("phone", phone);
-                        codeJson.putOpt("code", code);
-                        codeJson.putOpt("requestToken", sendCodeResData.optString("requestToken"));
-                        LoginSDK.getInstance().doBind(accessToken, openId, codeJson.toString(), Provider.NOXPHONE, new IBaseListener() {
-                            @Override
-                            public void onSuccess(IBaseRespEntity response) {
-                                Log.d(TAG, "code:" + response.getCode() + ",message:" + response.getMessage());
-                            }
-
-                            @Override
-                            public void onError(IBaseRespEntity response) {
-                                Log.d(TAG, "code:" + response.getCode() + ",message:" + response.getMessage());
-                            }
-                        });
-
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
+                        @Override
+                        public void onError(IBaseRespEntity response) {
+                            Log.d(TAG, "code:" + response.getCode() + ",message:" + response.getMessage());
+                        }
+                    });
 
                 }
+                break;
+
+            case R.id.tel_login_btn:
+                if (phone.length() > 0 && code.length() > 0 && sendCodeResData != null) {
+                    NoxPhoneCodeEntity codeEntity = new NoxPhoneCodeEntity(phone, code, sendCodeResData.optString("requestToken"));
+                    LoginSDK.getInstance().doLogin(codeEntity, getLoginListener());
+                }
+
+                break;
+
+            case R.id.user_btn:
+                if (accessToken != null && openId != null) {
+                    LoginSDK.getInstance().getUserInfo(accessToken, openId, getLoginListener());
+                }
+
                 break;
             default:
                 break;

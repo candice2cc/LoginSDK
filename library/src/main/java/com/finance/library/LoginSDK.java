@@ -6,7 +6,9 @@ import android.util.Log;
 
 import com.finance.library.config.ServiceConstants;
 import com.finance.library.entity.BindAccountReqEntity;
+import com.finance.library.entity.NoxPhoneCodeEntity;
 import com.finance.library.entity.RefreshReqEntity;
+import com.finance.library.entity.UserInfoEntity;
 import com.finance.library.entity.UserRespEntity;
 import com.finance.library.listener.HttpListener;
 import com.finance.library.listener.IBaseListener;
@@ -14,10 +16,14 @@ import com.finance.library.listener.LoginListener;
 import com.finance.library.listener.RefreshListener;
 import com.finance.library.utils.BindHelper;
 import com.finance.library.utils.IBaseHelper;
+import com.finance.library.utils.LoginHelper;
 import com.finance.library.utils.LogoutHelper;
 import com.finance.library.utils.RefreshHelper;
 import com.finance.library.utils.SDKUtil;
 import com.finance.library.weixin.WeixinHandleActivity;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.IOException;
 import java.lang.ref.WeakReference;
@@ -174,7 +180,39 @@ public class LoginSDK {
     }
 
 
+    public void doLogin(NoxPhoneCodeEntity codeEntity, final LoginListener loginListener) {
+        BindAccountReqEntity bindReq = new BindAccountReqEntity();
+        bindReq.setClientId(getAppValue(KEY_CLIENT_ID));
+        bindReq.setProvider(codeEntity.getProvider());
 
+        JSONObject codeJson = new JSONObject();
+
+        try {
+            codeJson.putOpt("phone", codeEntity.getPhone());
+            codeJson.putOpt("code", codeEntity.getPhoneCode());
+            codeJson.putOpt("requestToken", codeEntity.getRequestToken());
+            bindReq.setCode(codeJson.toString());
+
+            LoginHelper.loginAuth(bindReq, new HttpListener() {
+                @Override
+                public void onFailure(IOException e) {
+                    LoginHelper.onError(loginListener);
+
+                }
+
+                @Override
+                public void onResponse(String responseStr) {
+                    LoginHelper.onLoginAuth(responseStr, loginListener);
+
+                }
+            });
+
+        } catch (JSONException e) {
+            LoginHelper.onError(CodeEnum.FAIL.getCode(), e.getMessage(), loginListener);
+            e.printStackTrace();
+        }
+
+    }
 
     /**
      * 发送手机验证码
@@ -206,35 +244,59 @@ public class LoginSDK {
      *
      * @param accessToken
      * @param openId
-     * @param code
-     * @param provider
+     * @param codeEntity
      * @param listener
      */
-    public void doBind(String accessToken, String openId, String code, String provider, final IBaseListener listener) {
+    public void doBind(String accessToken, String openId, NoxPhoneCodeEntity codeEntity, final IBaseListener listener) {
         BindAccountReqEntity bindReq = new BindAccountReqEntity();
         bindReq.setClientId(getAppValue(KEY_CLIENT_ID));
         bindReq.setClientSecret(getAppValue(KEY_CLIENT_SECRET));
         bindReq.setAccessToken(accessToken);
         bindReq.setOpenId(openId);
-        bindReq.setCode(code);
-        bindReq.setProvider(provider);
-        BindHelper.bindAccount(bindReq, new HttpListener() {
+        JSONObject codeJson = new JSONObject();
+        try {
+            codeJson.putOpt("phone", codeEntity.getPhone());
+            codeJson.putOpt("code", codeEntity.getPhoneCode());
+            codeJson.putOpt("requestToken", codeEntity.getRequestToken());
+            bindReq.setCode(codeJson.toString());
+            bindReq.setProvider(codeEntity.getProvider());
+            BindHelper.bindAccount(bindReq, new HttpListener() {
+                @Override
+                public void onFailure(IOException e) {
+                    IBaseHelper.onError(listener);
+                }
+
+                @Override
+                public void onResponse(String responseStr) {
+                    IBaseHelper.onResponse(responseStr, listener);
+                }
+            });
+        } catch (JSONException e) {
+            e.printStackTrace();
+            IBaseHelper.onError(CodeEnum.FAIL.getCode(), e.getMessage(), listener);
+        }
+
+
+    }
+
+
+    public void getUserInfo(final String accessToken, final String openId, final LoginListener loginListener) {
+
+        LoginHelper.queryUserInfo(accessToken, openId, new HttpListener() {
             @Override
             public void onFailure(IOException e) {
-                IBaseHelper.onError(listener);
+                LoginHelper.onError(loginListener);
             }
 
             @Override
             public void onResponse(String responseStr) {
-                IBaseHelper.onResponse(responseStr, listener);
+                UserInfoEntity userInfoEntity = new UserInfoEntity();
+                userInfoEntity.setAccessToken(accessToken);
+                userInfoEntity.setOpenId(openId);
+                LoginHelper.onUserInfo(responseStr,userInfoEntity,loginListener);
+
             }
         });
-    }
-
-
-
-    public void getUserInfo() {
-
     }
 
     public void destroy() {

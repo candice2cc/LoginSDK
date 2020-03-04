@@ -1,8 +1,9 @@
 package com.finance.library.utils;
 
 import com.finance.library.CodeEnum;
-import com.finance.library.entity.LoginReqEntity;
 import com.finance.library.config.ServiceConstants;
+import com.finance.library.entity.BindAccountReqEntity;
+import com.finance.library.entity.LoginReqEntity;
 import com.finance.library.entity.UserInfoEntity;
 import com.finance.library.entity.UserRespEntity;
 import com.finance.library.listener.HttpListener;
@@ -120,13 +121,26 @@ public class LoginHelper {
         }
     }
 
+
+
+
+    public static void loginAuth(BindAccountReqEntity bindReq, HttpListener httpListener) {
+        FormBody formBody = new FormBody.Builder()
+                .add("client_id", bindReq.getClientId())
+                .add("code", bindReq.getCode())
+                .add("provider", bindReq.getProvider())
+                .build();
+
+        HttpUtil.getInstance().post(ServiceConstants.URL_LOGIN, formBody, httpListener);
+    }
+
     public static void onError(int code, String msg, LoginListener loginListener) {
         loginListener.onError(new UserRespEntity.Builder(code)
                 .setMessage(msg)
                 .build());
     }
 
-    public static void onError(LoginListener loginListener){
+    public static void onError(LoginListener loginListener) {
         onError(CodeEnum.FAIL.getCode(), CodeEnum.FAIL.getMsg(), loginListener);
 
     }
