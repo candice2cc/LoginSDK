@@ -62,7 +62,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         telLoginBtn.setOnClickListener(this);
 
 
-
     }
 
 
@@ -146,6 +145,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     JSONObject codeJson = new JSONObject();
 
                     try {
+                        // 考虑后续其他账号类型的绑定，此处需要App端进行code的转换
                         codeJson.putOpt("phone", phone);
                         codeJson.putOpt("code", code);
                         codeJson.putOpt("requestToken", sendCodeResData.optString("requestToken"));
