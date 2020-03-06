@@ -155,6 +155,24 @@ public class LoginSDK {
 
     }
 
+    /**
+     * 刷新Token的同步方法
+     *
+     * @param refreshToken
+     * @return
+     */
+    public UserRespEntity refreshAccessToken(String refreshToken) {
+        RefreshReqEntity refreshReq = new RefreshReqEntity();
+        refreshReq.setClientId(getAppValue(KEY_CLIENT_ID));
+        refreshReq.setClientSecret(getAppValue(KEY_CLIENT_SECRET));
+        refreshReq.setGrantType(ServiceConstants.GRANT_TYPE);
+        refreshReq.setRefreshToken(refreshToken);
+        String responseStr = RefreshHelper.refreshAccessToken(refreshReq);
+        if (responseStr == null) {
+            return RefreshHelper.onError();
+        }
+        return RefreshHelper.onToken(responseStr);
+    }
 
     /**
      * 登录注销
@@ -300,7 +318,7 @@ public class LoginSDK {
     }
 
     public void destroy() {
-        Log.d(TAG,"destroy");
+        Log.d(TAG, "destroy");
         if (wrPlatform != null) {
             wrPlatform.clear();
         }

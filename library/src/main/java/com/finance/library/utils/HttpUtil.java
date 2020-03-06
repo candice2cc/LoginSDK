@@ -62,4 +62,21 @@ public class HttpUtil {
             }
         });
     }
+
+    public String post(final String url, FormBody formBody) {
+        final Request request = new Request.Builder()
+                .url(url)
+                .post(formBody)
+                .build();
+        Call call = client.newCall(request);
+        try {
+            Response response = call.execute();
+            return response.body().string();
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        }
+
+
+    }
 }
