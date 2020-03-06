@@ -1,5 +1,12 @@
 apply plugin: 'com.android.application'
 
+Properties props = new Properties()
+File f = file(rootProject.file("signi.properties"))
+if (!f.exists()) {
+    f = file(rootProject.file("gradle.properties"))
+}
+props.load(new FileInputStream(f))
+
 android {
     compileSdkVersion 29
     buildToolsVersion "29.0.2"
@@ -10,6 +17,9 @@ android {
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+
+        manifestPlaceholders = [APP_ID_QQ: props['APP_ID_QQ']]
+
     }
     buildTypes {
         release {

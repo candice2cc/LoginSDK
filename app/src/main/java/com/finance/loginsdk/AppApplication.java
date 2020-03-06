@@ -31,4 +31,10 @@ public class AppApplication extends Application {
                 Arrays.<Class<? extends IPlatform>>asList(
                         WeiXinPlatform.class, QQPlatform.class));
     }
+
+    @Override
+    public void onTerminate() {
+        super.onTerminate();
+        LoginSDK.getInstance().destroy();
+    }
 }

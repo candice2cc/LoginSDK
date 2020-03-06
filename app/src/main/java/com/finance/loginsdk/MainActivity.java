@@ -1,5 +1,6 @@
 package com.finance.loginsdk;
 
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -9,15 +10,12 @@ import android.widget.EditText;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.finance.library.LoginSDK;
-
 import com.finance.library.entity.IBaseRespEntity;
 import com.finance.library.entity.NoxPhoneCodeEntity;
 import com.finance.library.entity.UserRespEntity;
-
 import com.finance.library.listener.IBaseListener;
 import com.finance.library.listener.LoginListener;
 import com.finance.library.listener.RefreshListener;
-
 import com.finance.library.qq.QQPlatform;
 import com.finance.library.weixin.WeiXinPlatform;
 
@@ -25,7 +23,7 @@ import org.json.JSONObject;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
     private final static String TAG = "MainActivity";
-    private Button weixinLoginBtn, qqLoginBtn, refreshBtn, logoutBtn, codeBtn, telLoginBtn, telBindBtn, userBtn;
+    private Button weixinLoginBtn, qqLoginBtn, refreshBtn, refreshSyncBtn, logoutBtn, codeBtn, telLoginBtn, telBindBtn, userBtn;
 
 
     private EditText telInput, codeInput;
@@ -37,14 +35,17 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     private LoginListener loginListener;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+
         weixinLoginBtn = findViewById(R.id.weixin_login_btn);
         qqLoginBtn = findViewById(R.id.qq_login_btn);
         refreshBtn = findViewById(R.id.refresh_btn);
+        refreshSyncBtn = findViewById(R.id.refresh_sync_btn);
         logoutBtn = findViewById(R.id.logout_btn);
         userBtn = findViewById(R.id.user_btn);
 
@@ -58,6 +59,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         weixinLoginBtn.setOnClickListener(this);
         qqLoginBtn.setOnClickListener(this);
         refreshBtn.setOnClickListener(this);
+        refreshSyncBtn.setOnClickListener(this);
         logoutBtn.setOnClickListener(this);
         userBtn.setOnClickListener(this);
 
@@ -105,6 +107,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 break;
             case R.id.refresh_btn:
                 if (refreshToken != null) {
+
                     LoginSDK.getInstance().refreshAccessToken(refreshToken, new RefreshListener() {
                         @Override
                         public void onSuccess(UserRespEntity response) {
@@ -124,7 +127,31 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
                 }
                 break;
+            case R.id.refresh_sync_btn:
+                if (refreshToken != null) {
 
+                    AsyncTask task = new AsyncTask() {
+                        @Override
+                        protected UserRespEntity doInBackground(Object[] objects) {
+                            // 同步方法调用
+                            UserRespEntity respEntity = LoginSDK.getInstance().refreshAccessToken(refreshToken);
+                            Log.d(TAG, "refreshAccessToken 调用");
+
+                            return respEntity;
+                        }
+
+                        @Override
+                        protected void onPostExecute(Object o) {
+                            super.onPostExecute(o);
+                            if (o instanceof UserRespEntity) {
+                                UserRespEntity respEntity = (UserRespEntity) o;
+                                Log.d(TAG, "code:" + respEntity.getCode() + ",message:" + respEntity.getMessage());
+                            }
+                        }
+                    };
+                    task.execute();
+                }
+                break;
             case R.id.code_btn:
                 if (phone.length() > 0) {
                     LoginSDK.getInstance().doSendCode(phone, new IBaseListener() {
@@ -208,4 +235,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
         return loginListener;
     }
+
+
 }
