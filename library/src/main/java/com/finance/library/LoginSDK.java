@@ -360,6 +360,8 @@ public class LoginSDK {
     }
 
     public void onActivityCreate(WeixinHandleActivity activity) {
-        onCreateListener.onCreate(activity);
+        if(onCreateListener != null){
+            onCreateListener.onCreate(activity);
+        }
     }
 }
