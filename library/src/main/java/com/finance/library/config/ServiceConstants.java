@@ -15,7 +15,7 @@ public class ServiceConstants {
     public static final String URL_USER_INFO = "http://10.8.7.243:8100/api/user_info";
     public static final String URL_REFRESH_TOKEN = "http://10.8.7.243:8100/oauth/token";
     public static final String URL_LOGOUT = "http://10.8.7.243:8100/api/logout";
-    public static final String URL_SEND_TEL_CODE = "http://10.8.7.243:8100/api/login/sms";
+    public static final String URL_SEND_TEL_CODE = "http://10.8.7.243:8100/api/login/sms/v2";
     public static final String URL_BIND = "http://10.8.7.243:8100/api/third/binding";
 
     // 成功状态码
