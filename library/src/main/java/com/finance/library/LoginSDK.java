@@ -356,7 +356,10 @@ public class LoginSDK {
     }
 
     public IPlatform getCurPlatform() {
-        return wrPlatform.get();
+        if(wrPlatform != null){
+            wrPlatform.get();
+        }
+        return null;
     }
 
     public void onActivityCreate(WeixinHandleActivity activity) {
